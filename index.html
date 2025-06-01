@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ziidi Interest Calculator</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      padding: 0;
+      margin: 0;
+      background: linear-gradient(to right, #4CAF50, #2E7D32);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+      width: 90%;
+      animation: slideFadeIn 0.8s ease-out;
+    }
+
+    @keyframes slideFadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #2E7D32;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #4CAF50;
+    }
+
+    button {
+      width: 100%;
+      background: #4CAF50;
+      color: white;
+      padding: 12px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #388E3C;
+    }
+
+    #result {
+      margin-top: 20px;
+      background: #E8F5E9;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      color: #1B5E20;
+      font-size: 1.1em;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>📊 Ziidi MMF Interest Calculator</h2>
+
+    <label>Initial Deposit (KES):</label>
+    <input type="number" id="initial" placeholder="10000">
+
+    <label>Monthly Top-Up (KES):</label>
+    <input type="number" id="monthly" placeholder="2000">
+
+    <label>Duration (months):</label>
+    <input type="number" id="months" placeholder="3">
+
+    <label>Annual Interest Rate (%):</label>
+    <input type="number" id="rate" placeholder="13.65">
+
+    <button onclick="calculateInterest()">Calculate 💸</button>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('en-KE', {
+        style: 'currency',
+        currency: 'KES',
+        minimumFractionDigits: 2
+      }).format(value);
+    }
+
+    function calculateInterest() {
+      const initial = parseFloat(document.getElementById('initial').value) || 0;
+      const monthly = parseFloat(document.getElementById('monthly').value) || 0;
+      const months = parseInt(document.getElementById('months').value) || 0;
+      const rate = parseFloat(document.getElementById('rate').value) || 0;
+
+      const monthlyRate = rate / 12 / 100;
+      let total = 0;
+      let principal = 0;
+
+      for (let i = 0; i < months; i++) {
+        const current = i === 0 ? initial : monthly;
+        principal += current;
+        total += current * Math.pow(1 + monthlyRate, months - i);
+      }
+
+      const interest = total - principal;
+
+      document.getElementById('result').innerHTML = `
+        <strong>Total after ${months} month(s):</strong><br> ${formatCurrency(total)}<br>
+        <strong>Interest earned:</strong><br> ${formatCurrency(interest)}
+      `;
+    }
+  </script>
+</body>
+</html>
